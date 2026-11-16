@@ -1,0 +1,126 @@
+{
+  "name": "ayah-studio",
+  "productName": "Ayah Studio",
+  "version": "1.0.0",
+  "description": "Offline desktop studio for creating Quran recitation (tilawat) reels for TikTok, Instagram, Facebook and YouTube.",
+  "author": {
+    "name": "Ayah Studio",
+    "email": "ayahstudio@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/fuwxt/ayah-studio",
+  "license": "MIT",
+  "main": "dist-electron/main.js",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "dev:desktop": "node scripts/build-electron.mjs && concurrently -k \"vite --port 5173 --strictPort\" \"wait-on tcp:5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "vite build && node scripts/build-electron.mjs",
+    "ffmpeg": "node scripts/fetch-ffmpeg.mjs",
+    "start": "npm run build && electron .",
+    "dist": "npm run build && node scripts/fetch-ffmpeg.mjs && electron-builder --publish never",
+    "dist:win": "npm run build && node scripts/fetch-ffmpeg.mjs win32 x64 && electron-builder --win --x64 --publish never",
+    "dist:win-portable": "npm run build && node scripts/fetch-ffmpeg.mjs win32 x64 && electron-builder --win portable zip --x64 --publish never -c.win.signAndEditExecutable=false",
+    "dist:mac": "npm run build && node scripts/fetch-ffmpeg.mjs darwin && electron-builder --mac --publish never",
+    "dist:linux": "npm run build && node scripts/fetch-ffmpeg.mjs linux x64 && electron-builder --linux --x64 --publish never"
+  },
+  "build": {
+    "appId": "com.ayahstudio.app",
+    "productName": "Ayah Studio",
+    "copyright": "Copyright © 2026 Ayah Studio",
+    "directories": {
+      "output": "release/${version}",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/ffmpeg",
+        "to": "ffmpeg",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "AyahStudio-${version}-win-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ayah Studio",
+      "artifactName": "AyahStudio-Setup-${version}-x64.${ext}"
+    },
+    "portable": {
+      "artifactName": "AyahStudio-Portable-${version}-x64.${ext}"
+    },
+    "mac": {
+      "icon": "build/icon.png",
+      "category": "public.app-category.video",
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "AudioVideo",
+      "target": [
+        "AppImage"
+      ]
+    }
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/amiri": "^5.3.0",
+    "@fontsource/amiri-quran": "^5.3.0",
+    "@fontsource/lateef": "^5.3.0",
+    "@fontsource/noto-kufi-arabic": "^5.3.0",
+    "@fontsource/noto-naskh-arabic": "^5.3.0",
+    "@fontsource/noto-nastaliq-urdu": "^5.3.0",
+    "@fontsource/reem-kufi": "^5.3.0",
+    "@fontsource/scheherazade-new": "^5.3.0",
+    "extract-zip": "^2.0.1",
+    "lucide-react": "^1.73.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "concurrently": "^9.2.5",
+    "cross-env": "^10.1.0",
+    "electron": "^45.3.2",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.27.7",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8",
+    "wait-on": "^9.5.1"
+  }
+}

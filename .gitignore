@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-electron/
+release/
+resources/ffmpeg/
+.next/
+*.log
+.DS_Store
+.env*.local
+.vercel
